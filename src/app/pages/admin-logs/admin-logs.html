@@ -1,0 +1,101 @@
+<!-- Header with User Info and Logout -->
+<header class="admin-header">
+  <div class="header-content">
+    <div class="header-left">
+      <h1 class="header-title">📊 Admin Dashboard</h1>
+    </div>
+    <div class="header-right">
+      <div class="user-info">
+        <span class="user-role admin">{{ currentUser()?.role }}</span>
+        <span class="user-name">{{ currentUser()?.name }}</span>
+      </div>
+      <button (click)="logout()" class="logout-button">Logout</button>
+    </div>
+  </div>
+</header>
+
+<body class="bg-neutral-50 min-h-screen">
+  <section class="container mx-auto px-4 py-6 md:py-10 max-w-6xl">
+    
+    <!-- Statistics Cards -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-value">{{ statistics().totalPassengers }}</div>
+        <div class="stat-label">Total Passengers</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ statistics().totalEntries }}</div>
+        <div class="stat-label">Total Entries</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value">{{ statistics().uniquePlates }}</div>
+        <div class="stat-label">Unique Vehicles</div>
+      </div>
+    </div>
+
+    <!-- Controls Section -->
+    <div class="controls-section">
+      <div class="search-container">
+        <input
+          type="text"
+          [(ngModel)]="searchQuery"
+          placeholder="Search by plate number, guard name, or date..."
+          class="search-input"
+        />
+      </div>
+      <div class="action-buttons">
+        <button (click)="exportLogs()" class="btn btn-export" *ngIf="logs().length > 0">
+          📥 Export CSV
+        </button>
+        <button (click)="clearAllLogs()" class="btn btn-danger" *ngIf="logs().length > 0">
+          🗑️ Clear All
+        </button>
+      </div>
+    </div>
+
+    <!-- Logs Table -->
+    <div class="logs-section">
+      <h2 class="section-title">Guard Submission Logs</h2>
+      
+      <div *ngIf="getFilteredLogs().length === 0" class="no-logs">
+        <p class="no-logs-icon">📭</p>
+        <p class="no-logs-text">No logs found</p>
+      </div>
+
+      <div *ngIf="getFilteredLogs().length > 0" class="table-responsive">
+        <table class="logs-table">
+          <thead>
+            <tr>
+              <th>Date & Time</th>
+              <th>Guard Name</th>
+              <th>Plate Number</th>
+              <th>Passenger Count</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let log of getFilteredLogs()" class="log-row">
+              <td class="cell-datetime">
+                <span class="date">{{ log.date }}</span>
+                <span class="time">{{ log.time }}</span>
+              </td>
+              <td class="cell-guard">{{ log.guardName }}</td>
+              <td class="cell-plate">
+                <span class="plate-badge">{{ log.plateNumber }}</span>
+              </td>
+              <td class="cell-count">
+                <span class="count-badge">{{ log.count }}</span>
+              </td>
+              <td class="cell-action">
+                <button (click)="deleteLog(log.id)" class="btn-delete" title="Delete entry">
+                  ✕
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+</body>
