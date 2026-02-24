@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CounterPage } from "./counter-page/counter-page";
+import { CounterPage } from "./pages/counter-page/counter-page";
 
 @Component({
   selector: 'app-root',
