@@ -16,6 +16,8 @@ export class CounterPage {
   plateNumber = signal<string>('');
   currentUser = signal<any>(null);
   submitMessage = signal<string>('');
+  editingCount = false;
+  manualCountValue: number = 0;
 
   constructor(
     private authService: AuthService,
@@ -35,6 +37,21 @@ export class CounterPage {
     effect(() => {
       this.storageService.savePassengerData(this.count(), this.plateNumber());
     });
+  }
+
+  enableEditCount() {
+    this.manualCountValue = this.count();
+    this.editingCount = true;
+    setTimeout(() => {
+      const input = document.querySelector('.manual-count-input') as HTMLInputElement;
+      if (input) input.focus();
+    });
+  }
+
+  saveManualCount() {
+    const val = Math.max(0, Math.floor(Number(this.manualCountValue)) || 0);
+    this.count.set(val);
+    this.editingCount = false;
   }
 
   increment(): void {
