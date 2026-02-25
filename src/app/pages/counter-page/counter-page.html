@@ -3,7 +3,7 @@
 <header class="counter-header">
   <div class="header-content">
     <div class="header-left flex items-center gap-4">
-      <img src="/assets/images/JTI_Logo.svg" alt="JTI Logo" class="jti-logo" />
+      <img src="assets/images/JTI_Logo.svg" alt="JTI Logo" class="jti-logo" />
       <h1 class="header-title">Passenger Counter</h1>
     </div>
     <div class="header-right">
@@ -18,17 +18,17 @@
   </div>
 </header>
 
-<body class="bg-neutral-50 min-h-screen">
-  <section class="container mx-auto px-4 py-6 md:py-10 lg:py-12 max-w-4xl">
+<body class="bg-neutral-50">
+  <section class="container mx-auto px-4 py-0 md:py-2 lg:py-3 max-w-4xl">
     <!-- Counter Section -->
-    <div class="mt-3 md:mt-6 bg-white rounded-2xl shadow-lg border border-neutral-200 p-8 md:p-12">
-      <h2 class="text-blue-950 font-bold text-2xl md:text-3xl mb-6 md:mb-8 text-center">Passenger Count</h2>
+    <div class="mt-0 md:mt-4 bg-white rounded-2xl shadow-lg border border-neutral-200 p-8 md:p-12">
+      <h2 class="text-blue-950 font-bold text-2xl md:text-3xl mb-2 md:mb-4 text-center">Passenger Count</h2>
       
       <!-- Counter Display -->
-      <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 mb-6 md:mb-8">
+      <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 mb-4 md:mb-6">
         
         <!-- Count Display (Editable) -->
-        <div class="flex items-center justify-center w-full md:w-auto order-1 md:order-2 min-w-[160px] md:min-w-[160px] lg:min-w-[200px] px-8 md:px-8 py-8 md:py-8 bg-blue-950/5 border-2 border-blue-950/20 rounded-xl md:rounded-2xl">
+        <div class="flex items-center justify-center w-full md:w-auto order-1 md:order-2 min-w-[160px] md:min-w-[160px] lg:min-w-[200px] px-8 md:px-8 py-4 md:py-6 bg-blue-950/5 border-2 border-blue-950/20 rounded-xl md:rounded-2xl">
           <span *ngIf="!editingCount" class="text-blue-950 font-bold text-6xl md:text-6xl lg:text-7xl tabular-nums cursor-pointer" (click)="enableEditCount()">{{ count() }}</span>
           <input *ngIf="editingCount" type="number" min="0" class="manual-count-input text-blue-950 font-bold text-6xl md:text-6xl lg:text-7xl tabular-nums text-center bg-transparent border-none outline-none w-24 md:w-32" [(ngModel)]="manualCountValue" (blur)="saveManualCount()" (keydown.enter)="saveManualCount()" autofocus />
         </div>
@@ -38,7 +38,7 @@
           <!-- Minus Button -->
           <button 
             (click)="decrement()"
-            class="flex items-center justify-center w-20 h-20 md:w-20 md:h-20 lg:w-24 lg:h-24 md:order-1 bg-white border-2 border-blue-950 text-blue-950 rounded-xl md:rounded-2xl font-bold text-4xl md:text-4xl lg:text-5xl hover:bg-blue-950 hover:text-white transition-all duration-200 active:scale-95 shadow-md disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-blue-950"
+            class="flex items-center justify-center w-20 h-18 md:w-20 md:h-18 lg:w-24 lg:h-22 md:order-1 bg-white border-2 border-blue-950 text-blue-950 rounded-xl md:rounded-2xl font-bold text-4xl md:text-4xl lg:text-5xl hover:bg-blue-950 hover:text-white transition-all duration-200 active:scale-95 shadow-md disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-blue-950"
             [disabled]="count() === 0"
           >
             −
@@ -47,7 +47,7 @@
           <!-- Plus Button -->
           <button 
             (click)="increment()"
-            class="flex items-center justify-center w-20 h-20 md:w-20 md:h-20 lg:w-24 lg:h-24 md:order-3 bg-blue-950 text-white rounded-xl md:rounded-2xl font-bold text-4xl md:text-4xl lg:text-5xl hover:bg-blue-900 transition-all duration-200 active:scale-95 shadow-md"
+            class="flex items-center justify-center w-20 h-18 md:w-20 md:h-18 lg:w-24 lg:h-22 md:order-3 bg-blue-950 text-white rounded-xl md:rounded-2xl font-bold text-4xl md:text-4xl lg:text-5xl hover:bg-blue-900 transition-all duration-200 active:scale-95 shadow-md"
           >
             +
           </button>
@@ -55,10 +55,10 @@
       </div>
 
       <!-- Reset Button -->
-      <div class="flex justify-center mt-6 md:mt-8">
+      <div class="flex justify-center mt-2 md:mt-4">
         <button 
           (click)="reset()"
-          class="px-8 md:px-10 py-3 md:py-4 text-base md:text-lg font-semibold text-blue-950 bg-white border-2 border-blue-950/20 rounded-lg md:rounded-xl hover:bg-blue-950/5 hover:border-blue-950/40 transition-all duration-200 active:scale-95"
+          class="px-8 md:px-10 py-1 md:py-2 text-base md:text-lg font-semibold text-blue-950 bg-white border-2 border-blue-950/20 rounded-lg md:rounded-xl hover:bg-blue-950/5 hover:border-blue-950/40 transition-all duration-200 active:scale-95"
         >
           Reset Counter
         </button>
@@ -66,22 +66,22 @@
     </div>
 
     <!-- Plate Number Section -->
-    <div class="mt-8 md:mb-6">
+    <div class="mt-6 md:mb-4">
       <!-- <label for="plateNumber" class="block text-blue-950 font-semibold text-lg md:text-xl mb-3 md:mb-4">Vehicle Plate Number</label> -->
       <input 
         type="text" 
         id="plateNumber"
         [(ngModel)]="plateNumber"
         placeholder="Vehicle plate number..."
-        class="w-full px-5 md:px-6 py-6 md:py-7 text-lg md:text-2xl font-medium text-blue-950 bg-white border-2 border-neutral-200 rounded-xl focus:outline-none focus:border-blue-950 focus:ring-2 focus:ring-blue-950/10 transition-all shadow-sm hover:border-neutral-300 text-center placeholder:text-center placeholder:font-bold"
+        class="w-full px-5 md:px-6 py-2 md:py-5 text-lg md:text-2xl font-medium text-blue-950 bg-white border-2 border-neutral-200 rounded-xl focus:outline-none focus:border-blue-950 focus:ring-2 focus:ring-blue-950/10 transition-all shadow-sm hover:border-neutral-300 text-center placeholder:text-center placeholder:font-bold"
       />
     </div>
 
     <!-- Submit Button -->
-    <div class="flex justify-center mt-6 md:mt-8 mb-8 md:mb-12">
+    <div class="flex justify-center mt-4 md:mt-6 mb-4 md:mb-6">
       <button 
         (click)="submit()"
-        class="px-12 md:px-16 py-4 md:py-5 text-base md:text-lg font-bold text-white bg-blue-950 border-2 border-blue-950 rounded-lg md:rounded-xl hover:bg-blue-900 hover:border-blue-900 transition-all duration-200 active:scale-95 shadow-md flex items-center gap-2"
+        class="px-12 md:px-16 py-2 md:py-4 text-base md:text-lg font-bold text-white bg-blue-950 border-2 border-blue-950 rounded-lg md:rounded-xl hover:bg-blue-900 hover:border-blue-900 transition-all duration-200 active:scale-95 shadow-md flex items-center gap-2"
       >
         <span>✓</span>
         <span>Submit Entry</span>
