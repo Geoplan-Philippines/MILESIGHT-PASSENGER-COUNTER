@@ -1,79 +1,94 @@
 <section class="login-container">
-  <div class="login-card">
-    <!-- Logo/Title -->
-    <div class="login-header">
-      <h1 class="login-title">Passenger Counter</h1>
-      <p class="login-subtitle">Login to continue</p>
+
+  <!-- Left Layout -->
+  <div class="login-left">
+    <div class="promo-content">
+      <h1 class="promo-title">Track and manage passenger flow efficiently.</h1>
     </div>
+    <!-- <div class="bg-layout">
+      <div class="promo-icon"></div>
+    </div> -->
+    <div class="gradient-overlay"></div>
+  </div>
 
-    <!-- Form -->
-    <form class="login-form" (keypress)="handleKeyPress($event)">
-      <!-- Username Input -->
-      <div class="form-group">
-        <label for="username" class="form-label">Username</label>
-        <input
-          id="username"
-          type="text"
-          [(ngModel)]="username"
-          name="username"
-          placeholder="Enter username"
-          class="form-input"
-          [disabled]="isLoading()"
-          autocomplete="off"
-        />
+  <!-- Right Side - Login Form -->
+  <div class="login-right">
+    <div class="login-card">
+      <!-- Logo/Title -->
+      <div class="login-header">
+        <h1 class="login-title">Passenger Counter</h1>
+        <p class="login-subtitle">Login to continue</p>
       </div>
 
-      <!-- Role Selection -->
-      <div class="form-group">
-        <label class="form-label">Select Role</label>
-        <div class="role-selector">
-          <button
-            type="button"
-            (click)="selectedRole.set('ADMIN')"
-            [class.active]="selectedRole() === 'ADMIN'"
-            class="role-button"
+      <!-- Form -->
+      <form class="login-form" (keypress)="handleKeyPress($event)">
+        <!-- Username Input -->
+        <div class="form-group">
+          <label for="username" class="form-label">Username</label>
+          <input
+            id="username"
+            type="text"
+            [(ngModel)]="username"
+            name="username"
+            placeholder="Enter username"
+            class="form-input"
             [disabled]="isLoading()"
-          >
-            <span class="role-icon">👨‍💼</span>
-            <span class="role-name">ADMIN</span>
-          </button>
-          <button
-            type="button"
-            (click)="selectedRole.set('GUARD')"
-            [class.active]="selectedRole() === 'GUARD'"
-            class="role-button"
-            [disabled]="isLoading()"
-          >
-            <span class="role-icon">🛡️</span>
-            <span class="role-name">GUARD</span>
-          </button>
+            autocomplete="off"
+          />
         </div>
+
+        <!-- Role Selection -->
+        <div class="form-group">
+          <label class="form-label">Select Role</label>
+          <div class="role-selector">
+            <button
+              type="button"
+              (click)="selectedRole.set('ADMIN')"
+              [class.active]="selectedRole() === 'ADMIN'"
+              class="role-button"
+              [disabled]="isLoading()"
+            >
+              <!-- <span class="role-icon">👨‍💼</span> -->
+              <span class="role-name">ADMIN</span>
+            </button>
+            <button
+              type="button"
+              (click)="selectedRole.set('GUARD')"
+              [class.active]="selectedRole() === 'GUARD'"
+              class="role-button"
+              [disabled]="isLoading()"
+            >
+              <!-- <span class="role-icon">🛡️</span> -->
+              <span class="role-name">GUARD</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Error Message -->
+        <div *ngIf="errorMessage()" class="error-message">
+          {{ errorMessage() }}
+        </div>
+
+        <!-- Login Button -->
+        <button
+          type="button"
+          (click)="login()"
+          [disabled]="isLoading()"
+          class="login-button"
+        >
+          <span *ngIf="!isLoading()">Login</span>
+          <span *ngIf="isLoading()" class="loading-spinner">Loading...</span>
+        </button>
+      </form>
+
+      <!-- Demo Credentials Info -->
+      <div class="demo-info">
+        <p class="demo-title">Demo Credentials:</p>
+        <ul class="demo-list">
+          <li><strong>Admin:</strong> username: <code>admin</code></li>
+          <li><strong>Guard:</strong> username: <code>guard</code></li>
+        </ul>
       </div>
-
-      <!-- Error Message -->
-      <div *ngIf="errorMessage()" class="error-message">
-        {{ errorMessage() }}
-      </div>
-
-      <!-- Login Button -->
-      <button
-        type="button"
-        (click)="login()"
-        [disabled]="isLoading()"
-        class="login-button"
-      >
-        <span *ngIf="!isLoading()">Login</span>
-        <span *ngIf="isLoading()" class="loading-spinner">Loading...</span>
-      </button>
-    </form>
-
-    <!-- Demo Credentials Info -->
-    <div class="demo-info">
-      <p class="demo-title">Demo Credentials:</p>
-      <ul class="demo-list">
-        <li><strong>Admin:</strong> username: <code>admin</code></li>
-        <li><strong>Guard:</strong> username: <code>guard</code></li>
-      </ul>
     </div>
   </div>
 </section>
