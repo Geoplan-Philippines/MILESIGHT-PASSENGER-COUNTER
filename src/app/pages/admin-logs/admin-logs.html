@@ -1,101 +1,246 @@
-<!-- Header with User Info and Logout -->
-<header class="admin-header">
-  <div class="header-content">
-    <div class="header-left">
-      <h1 class="header-title">📊 Admin Dashboard</h1>
-    </div>
-    <div class="header-right">
-      <div class="user-info">
-        <span class="user-role admin">{{ currentUser()?.role }}</span>
-        <span class="user-name">{{ currentUser()?.name }}</span>
-      </div>
-      <button (click)="logout()" class="logout-button">Logout</button>
-    </div>
-  </div>
-</header>
+<!-- admin-logs.html -->
+<div class="min-h-screen bg-slate-50 font-sans">
 
-<body class="bg-neutral-50 min-h-screen">
-  <section class="container mx-auto px-4 py-6 md:py-10 max-w-6xl">
-    
-    <!-- Statistics Cards -->
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-value">{{ statistics().totalPassengers }}</div>
-        <div class="stat-label">Total Passengers</div>
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <header class="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 h-14 flex items-center justify-between gap-4">
+
+      <!-- Brand -->
+      <div class="flex items-center gap-2.5 shrink-0">
+        <img src="/assets/images/JTI_Logo.svg" alt="JTI" class="h-6 w-auto" />
+        <div class="w-px h-4 bg-slate-200"></div>
+        <span class="text-[0.65rem] font-semibold tracking-widest uppercase text-slate-400">Admin</span>
       </div>
-      <div class="stat-card">
-        <div class="stat-value">{{ statistics().totalEntries }}</div>
-        <div class="stat-label">Total Entries</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-value">{{ statistics().uniquePlates }}</div>
-        <div class="stat-label">Unique Vehicles</div>
+
+      <!-- Page title — hidden on small screens -->
+      <span class="hidden sm:block text-sm font-bold text-slate-800 tracking-tight">Dashboard</span>
+
+      <!-- User + logout -->
+      <div class="flex items-center gap-2.5 shrink-0">
+        <div class="flex flex-col items-end gap-0.5">
+          <span class="font-mono text-[0.55rem] font-medium tracking-wider uppercase px-1.5 py-0.5 rounded border bg-amber-50 text-amber-800 border-amber-200">
+            {{ currentUser()?.role }}
+          </span>
+          <span class="text-[0.73rem] font-semibold text-slate-700">{{ currentUser()?.name }}</span>
+        </div>
+        <button
+          (click)="logout()"
+          class="text-[0.7rem] font-medium text-slate-500 border border-slate-200 px-2.5 py-1 rounded-md hover:border-slate-400 hover:text-slate-700 transition-colors whitespace-nowrap">
+          Sign out
+        </button>
       </div>
     </div>
+  </header>
 
-    <!-- Controls Section -->
-    <div class="controls-section">
-      <div class="search-container">
+  <!-- ── Body ───────────────────────────────────────────────────────────── -->
+  <main class="max-w-7xl mx-auto px-4 py-6 flex flex-col gap-5">
+
+    <!-- ── Stat Cards ──────────────────────────────────────────────────── -->
+    <div class="grid grid-cols-3 gap-3 sm:gap-4">
+
+      <div class="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 flex flex-col gap-1">
+        <span class="font-mono text-2xl sm:text-3xl font-semibold text-blue-800 leading-none">
+          {{ statistics().totalPassengers }}
+        </span>
+        <span class="text-[0.62rem] font-semibold tracking-widest uppercase text-slate-400 mt-1">
+          Total Passengers
+        </span>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 flex flex-col gap-1">
+        <span class="font-mono text-2xl sm:text-3xl font-semibold text-blue-800 leading-none">
+          {{ statistics().totalEntries }}
+        </span>
+        <span class="text-[0.62rem] font-semibold tracking-widest uppercase text-slate-400 mt-1">
+          Total Entries
+        </span>
+      </div>
+
+      <div class="bg-white border border-slate-200 rounded-xl p-4 sm:p-5 flex flex-col gap-1">
+        <span class="font-mono text-2xl sm:text-3xl font-semibold text-blue-800 leading-none">
+          {{ statistics().uniquePlates }}
+        </span>
+        <span class="text-[0.62rem] font-semibold tracking-widest uppercase text-slate-400 mt-1">
+          Unique Vehicles
+        </span>
+      </div>
+
+    </div>
+
+    <!-- ── Controls ────────────────────────────────────────────────────── -->
+    <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+
+      <!-- Search -->
+      <div class="flex-1 relative">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-4.35-4.35M17 11A6 6 0 1 1 5 11a6 6 0 0 1 12 0z"/>
+        </svg>
         <input
           type="text"
-          [(ngModel)]="searchQuery"
-          placeholder="Search by plate number, guard name, or date..."
-          class="search-input"
-        />
+          [ngModel]="searchQuery()"
+          (input)="onSearch($event)"
+          placeholder="Search by plate, guard name, or date…"
+          class="w-full pl-9 pr-4 py-2.5 text-sm text-slate-800 bg-white border border-slate-200 rounded-lg outline-none placeholder:text-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/15 transition-all" />
       </div>
-      <div class="action-buttons">
-        <button (click)="exportLogs()" class="btn btn-export" *ngIf="logs().length > 0">
-          📥 Export CSV
+
+      <!-- Action buttons -->
+      <div class="flex gap-2 shrink-0" *ngIf="logs().length > 0">
+        <button
+          (click)="exportLogs()"
+          class="flex items-center gap-1.5 px-3.5 py-2.5 text-[0.75rem] font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 hover:border-blue-300 transition-colors whitespace-nowrap">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2M7 10l5 5 5-5M12 15V3"/>
+          </svg>
+          Export CSV
         </button>
-        <button (click)="clearAllLogs()" class="btn btn-danger" *ngIf="logs().length > 0">
-          🗑️ Clear All
+        <button
+          (click)="clearAllLogs()"
+          class="flex items-center gap-1.5 px-3.5 py-2.5 text-[0.75rem] font-semibold text-red-600 bg-red-50 border border-red-200 rounded-lg hover:bg-red-100 hover:border-red-300 transition-colors whitespace-nowrap">
+          <svg class="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+          </svg>
+          Clear All
         </button>
       </div>
     </div>
 
-    <!-- Logs Table -->
-    <div class="logs-section">
-      <h2 class="section-title">Guard Submission Logs</h2>
-      
-      <div *ngIf="getFilteredLogs().length === 0" class="no-logs">
-        <p class="no-logs-icon">📭</p>
-        <p class="no-logs-text">No logs found</p>
+    <!-- ── Logs Table ───────────────────────────────────────────────────── -->
+    <div class="bg-white border border-slate-200 rounded-xl overflow-hidden">
+
+      <!-- Section header -->
+      <div class="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+        <h2 class="text-sm font-bold text-slate-800">Guard Submission Logs</h2>
+        <span class="font-mono text-[0.65rem] text-slate-400">
+          {{ getFilteredLogs().length }} {{ getFilteredLogs().length === 1 ? 'entry' : 'entries' }}
+        </span>
       </div>
 
-      <div *ngIf="getFilteredLogs().length > 0" class="table-responsive">
-        <table class="logs-table">
+      <!-- Empty state -->
+      <div *ngIf="getFilteredLogs().length === 0" class="flex flex-col items-center justify-center py-20 px-4 text-center">
+        <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mb-3">
+          <svg class="w-5 h-5 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+          </svg>
+        </div>
+        <p class="text-sm font-medium text-slate-500">No logs found</p>
+        <p class="text-[0.72rem] text-slate-400 mt-0.5" *ngIf="searchQuery()">Try adjusting your search</p>
+      </div>
+
+      <!-- Table -->
+      <div *ngIf="getFilteredLogs().length > 0" class="overflow-x-auto">
+        <table class="w-full text-sm">
+
           <thead>
-            <tr>
-              <th>Date & Time</th>
-              <th>Guard Name</th>
-              <th>Plate Number</th>
-              <th>Passenger Count</th>
-              <th>Action</th>
+            <tr class="border-b border-slate-100 bg-slate-50">
+              <th class="text-left px-5 py-3 text-[0.62rem] font-semibold tracking-widest uppercase text-slate-400 whitespace-nowrap">Date & Time</th>
+              <th class="text-left px-5 py-3 text-[0.62rem] font-semibold tracking-widest uppercase text-slate-400 whitespace-nowrap">Guard</th>
+              <th class="text-left px-5 py-3 text-[0.62rem] font-semibold tracking-widest uppercase text-slate-400 whitespace-nowrap">Plate</th>
+              <th class="text-left px-5 py-3 text-[0.62rem] font-semibold tracking-widest uppercase text-slate-400 whitespace-nowrap">Count</th>
+              <th class="text-left px-5 py-3 text-[0.62rem] font-semibold tracking-widest uppercase text-slate-400 whitespace-nowrap">Direction</th>
+              <th class="px-5 py-3"></th>
             </tr>
           </thead>
-          <tbody>
-            <tr *ngFor="let log of getFilteredLogs()" class="log-row">
-              <td class="cell-datetime">
-                <span class="date">{{ log.date }}</span>
-                <span class="time">{{ log.time }}</span>
+
+          <tbody class="divide-y divide-slate-100">
+            <tr *ngFor="let log of paginatedLogs()" class="group hover:bg-slate-50 transition-colors">
+
+              <!-- Date & Time -->
+              <td class="px-5 py-3.5 whitespace-nowrap">
+                <span class="block font-mono text-[0.75rem] font-medium text-slate-700">{{ log.date }}</span>
+                <span class="block font-mono text-[0.68rem] text-slate-400 mt-0.5">{{ log.time }}</span>
               </td>
-              <td class="cell-guard">{{ log.guardName }}</td>
-              <td class="cell-plate">
-                <span class="plate-badge">{{ log.plateNumber }}</span>
+
+              <!-- Guard -->
+              <td class="px-5 py-3.5">
+                <span class="text-[0.82rem] font-semibold text-slate-800">{{ log.guardName }}</span>
               </td>
-              <td class="cell-count">
-                <span class="count-badge">{{ log.count }}</span>
+
+              <!-- Plate -->
+              <td class="px-5 py-3.5">
+                <span class="font-mono text-[0.78rem] font-semibold tracking-widest bg-slate-100 text-slate-700 px-2.5 py-1 rounded-md border border-slate-200">
+                  {{ log.plateNumber }}
+                </span>
               </td>
-              <td class="cell-action">
-                <button (click)="deleteLog(log.id)" class="btn-delete" title="Delete entry">
-                  ✕
+
+              <!-- Count -->
+              <td class="px-5 py-3.5">
+                <span class="font-mono text-[0.78rem] font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md border border-blue-100 min-w-[2rem] inline-block text-center">
+                  {{ log.count }}
+                </span>
+              </td>
+
+              <!-- Direction -->
+              <td class="px-5 py-3.5">
+                <span
+                  *ngIf="log.direction === 'IN'"
+                  class="font-mono text-[0.6rem] font-semibold tracking-widest px-2 py-0.5 rounded border bg-green-50 text-green-700 border-green-200">
+                  IN
+                </span>
+                <span
+                  *ngIf="log.direction === 'OUT'"
+                  class="font-mono text-[0.6rem] font-semibold tracking-widest px-2 py-0.5 rounded border bg-red-50 text-red-600 border-red-200">
+                  OUT
+                </span>
+                <span *ngIf="!log.direction" class="text-slate-300 font-mono text-[0.7rem]">—</span>
+              </td>
+
+              <!-- Delete -->
+              <td class="px-5 py-3.5 text-right">
+                <button
+                  (click)="deleteLog(log.id)"
+                  title="Delete entry"
+                  class="opacity-0 group-hover:opacity-100 inline-flex items-center gap-1 text-[0.68rem] font-medium text-red-500 border border-red-200 px-2 py-1 rounded-md hover:bg-red-50 hover:border-red-400 transition-all whitespace-nowrap">
+                  <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                  </svg>
+                  Delete
                 </button>
               </td>
+
             </tr>
           </tbody>
         </table>
+
+        <!-- ── Pagination ───────────────────────────────────────────────── -->
+        <div class="flex items-center justify-between px-5 py-3.5 border-t border-slate-100 bg-slate-50">
+          <span class="text-[0.68rem] text-slate-400 font-mono">
+            Page {{ currentPage }} of {{ totalPages }}
+          </span>
+          <div class="flex items-center gap-1">
+            <button
+              (click)="prevPage()"
+              [disabled]="currentPage === 1"
+              class="w-7 h-7 flex items-center justify-center rounded-md border border-slate-200 text-slate-500 text-xs hover:bg-white hover:border-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+              ‹
+            </button>
+
+            <ng-container *ngFor="let p of pageNumbers">
+              <span *ngIf="p === -1" class="w-7 h-7 flex items-center justify-center text-slate-400 text-xs">…</span>
+              <button
+                *ngIf="p !== -1"
+                (click)="goToPage(p)"
+                class="w-7 h-7 flex items-center justify-center rounded-md border text-xs font-medium transition-all"
+                [class.bg-blue-800]="p === currentPage"
+                [class.text-white]="p === currentPage"
+                [class.border-blue-800]="p === currentPage"
+                [class.border-slate-200]="p !== currentPage"
+                [class.text-slate-600]="p !== currentPage"
+                [class.hover:bg-white]="p !== currentPage">
+                {{ p }}
+              </button>
+            </ng-container>
+
+            <button
+              (click)="nextPage()"
+              [disabled]="currentPage === totalPages"
+              class="w-7 h-7 flex items-center justify-center rounded-md border border-slate-200 text-slate-500 text-xs hover:bg-white hover:border-slate-300 disabled:opacity-30 disabled:cursor-not-allowed transition-all">
+              ›
+            </button>
+          </div>
+        </div>
+
       </div>
     </div>
 
-  </section>
-</body>
+  </main>
+</div>

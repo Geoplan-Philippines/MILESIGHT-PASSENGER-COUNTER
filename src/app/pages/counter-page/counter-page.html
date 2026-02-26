@@ -1,97 +1,209 @@
+<!-- counter-page.html -->
+<div class="min-h-dvh bg-slate-50 flex flex-col font-sans">
 
-<!-- Header with Logo, User Info and Logout -->
-<header class="counter-header">
-  <div class="header-content">
-    <div class="header-left flex items-center gap-4">
-      <img src="/assets/images/JTI_Logo.svg" alt="JTI Logo" class="jti-logo" />
-      <h1 class="header-title">Passenger Counter</h1>
+  <!-- ── Header ─────────────────────────────────────────────────────────── -->
+  <header class="sticky top-0 z-50 bg-white border-b border-slate-200 h-14 flex items-center justify-between px-4 gap-3">
+
+    <!-- Brand -->
+    <div class="flex items-center gap-2.5 shrink-0">
+      <img src="/assets/images/JTI_Logo.svg" alt="JTI" class="h-6 w-auto" />
+      <div class="w-px h-4 bg-slate-200"></div>
+      <span class="text-[0.65rem] font-semibold tracking-widest uppercase text-slate-400">Gate Control</span>
     </div>
-    <div class="header-right">
-      <div class="user-info">
-        <span class="user-role" [class.admin]="currentUser()?.role === 'ADMIN'" [class.guard]="currentUser()?.role === 'GUARD'">
+
+    <!-- Clock -->
+    <div class="flex flex-col items-center leading-none">
+      <span class="font-mono text-[0.8rem] font-medium text-slate-700 tracking-wide">{{ currentTime() }}</span>
+      <span class="text-[0.6rem] text-slate-400 mt-0.5">{{ currentDate() }}</span>
+    </div>
+
+    <!-- User + logout -->
+    <div class="flex items-center gap-2.5 shrink-0">
+      <div class="flex flex-col items-end gap-0.5">
+        <span
+          class="font-mono text-[0.55rem] font-medium tracking-wider uppercase px-1.5 py-0.5 rounded"
+          [class.bg-amber-50]="currentUser()?.role === 'ADMIN'"
+          [class.text-amber-800]="currentUser()?.role === 'ADMIN'"
+          [class.border]="true"
+          [class.border-amber-200]="currentUser()?.role === 'ADMIN'"
+          [class.bg-blue-50]="currentUser()?.role === 'GUARD'"
+          [class.text-blue-700]="currentUser()?.role === 'GUARD'"
+          [class.border-blue-200]="currentUser()?.role === 'GUARD'">
           {{ currentUser()?.role }}
         </span>
-        <span class="user-name">{{ currentUser()?.name }}</span>
+        <span class="text-[0.73rem] font-semibold text-slate-700">{{ currentUser()?.name }}</span>
       </div>
-      <button (click)="logout()" class="logout-button">Logout</button>
-    </div>
-  </div>
-</header>
-
-<body class="bg-neutral-50 min-h-screen">
-  <section class="container mx-auto px-4 py-6 md:py-10 lg:py-12 max-w-4xl">
-    <!-- Counter Section -->
-    <div class="mt-3 md:mt-6 bg-white rounded-2xl shadow-lg border border-neutral-200 p-8 md:p-12">
-      <h2 class="text-blue-950 font-bold text-2xl md:text-3xl mb-6 md:mb-8 text-center">Passenger Count</h2>
-      
-      <!-- Counter Display -->
-      <div class="flex flex-col md:flex-row items-center justify-center gap-6 md:gap-8 mb-6 md:mb-8">
-        
-        <!-- Count Display (Editable) -->
-        <div class="flex items-center justify-center w-full md:w-auto order-1 md:order-2 min-w-[160px] md:min-w-[160px] lg:min-w-[200px] px-8 md:px-8 py-8 md:py-8 bg-blue-950/5 border-2 border-blue-950/20 rounded-xl md:rounded-2xl">
-          <span *ngIf="!editingCount" class="text-blue-950 font-bold text-6xl md:text-6xl lg:text-7xl tabular-nums cursor-pointer" (click)="enableEditCount()">{{ count() }}</span>
-          <input *ngIf="editingCount" type="number" min="0" class="manual-count-input text-blue-950 font-bold text-6xl md:text-6xl lg:text-7xl tabular-nums text-center bg-transparent border-none outline-none w-24 md:w-32" [(ngModel)]="manualCountValue" (blur)="saveManualCount()" (keydown.enter)="saveManualCount()" autofocus />
-        </div>
-
-        <!-- Buttons Container (Mobile: horizontal, Desktop: split) -->
-        <div class="flex gap-4 md:gap-0 order-2 md:order-none md:contents">
-          <!-- Minus Button -->
-          <button 
-            (click)="decrement()"
-            class="flex items-center justify-center w-20 h-20 md:w-20 md:h-20 lg:w-24 lg:h-24 md:order-1 bg-white border-2 border-blue-950 text-blue-950 rounded-xl md:rounded-2xl font-bold text-4xl md:text-4xl lg:text-5xl hover:bg-blue-950 hover:text-white transition-all duration-200 active:scale-95 shadow-md disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white disabled:hover:text-blue-950"
-            [disabled]="count() === 0"
-          >
-            −
-          </button>
-
-          <!-- Plus Button -->
-          <button 
-            (click)="increment()"
-            class="flex items-center justify-center w-20 h-20 md:w-20 md:h-20 lg:w-24 lg:h-24 md:order-3 bg-blue-950 text-white rounded-xl md:rounded-2xl font-bold text-4xl md:text-4xl lg:text-5xl hover:bg-blue-900 transition-all duration-200 active:scale-95 shadow-md"
-          >
-            +
-          </button>
-        </div>
-      </div>
-
-      <!-- Reset Button -->
-      <div class="flex justify-center mt-6 md:mt-8">
-        <button 
-          (click)="reset()"
-          class="px-8 md:px-10 py-3 md:py-4 text-base md:text-lg font-semibold text-blue-950 bg-white border-2 border-blue-950/20 rounded-lg md:rounded-xl hover:bg-blue-950/5 hover:border-blue-950/40 transition-all duration-200 active:scale-95"
-        >
-          Reset Counter
-        </button>
-      </div>
-    </div>
-
-    <!-- Plate Number Section -->
-    <div class="mt-8 md:mb-6">
-      <!-- <label for="plateNumber" class="block text-blue-950 font-semibold text-lg md:text-xl mb-3 md:mb-4">Vehicle Plate Number</label> -->
-      <input 
-        type="text" 
-        id="plateNumber"
-        [(ngModel)]="plateNumber"
-        placeholder="Vehicle plate number..."
-        class="w-full px-5 md:px-6 py-6 md:py-7 text-lg md:text-2xl font-medium text-blue-950 bg-white border-2 border-neutral-200 rounded-xl focus:outline-none focus:border-blue-950 focus:ring-2 focus:ring-blue-950/10 transition-all shadow-sm hover:border-neutral-300 text-center placeholder:text-center placeholder:font-bold"
-      />
-    </div>
-
-    <!-- Submit Button -->
-    <div class="flex justify-center mt-6 md:mt-8 mb-8 md:mb-12">
-      <button 
-        (click)="submit()"
-        class="px-12 md:px-16 py-4 md:py-5 text-base md:text-lg font-bold text-white bg-blue-950 border-2 border-blue-950 rounded-lg md:rounded-xl hover:bg-blue-900 hover:border-blue-900 transition-all duration-200 active:scale-95 shadow-md flex items-center gap-2"
-      >
-        <span>✓</span>
-        <span>Submit Entry</span>
+      <button
+        (click)="logout()"
+        class="text-[0.7rem] font-medium text-slate-500 border border-slate-200 px-2.5 py-1 rounded-md hover:border-slate-400 hover:text-slate-700 transition-colors whitespace-nowrap">
+        Sign out
       </button>
     </div>
+  </header>
 
-    <!-- Submit Message -->
-    <div *ngIf="submitMessage()" class="submit-message" [class.success]="!submitMessage().includes('⚠️')" [class.error]="submitMessage().includes('⚠️')">
-      {{ submitMessage() }}
-    </div>
+  <!-- ── Main ───────────────────────────────────────────────────────────── -->
+  <main class="flex-1 flex flex-col gap-3.5 px-4 pt-4 pb-28 max-w-lg w-full mx-auto">
 
-  </section>
-</body>
+    <!-- Direction -->
+    <section class="bg-white border border-slate-200 rounded-xl p-5">
+      <p class="text-[0.65rem] font-semibold tracking-widest uppercase text-slate-400 mb-3">Direction</p>
+      <div class="flex gap-2.5">
+
+        <button
+          (click)="setDirection('IN')"
+          class="flex-1 flex flex-col items-center gap-1 py-4 rounded-lg border-[1.5px] transition-all active:scale-95"
+          [class.border-slate-200]="direction() !== 'IN'"
+          [class.bg-slate-50]="direction() !== 'IN'"
+          [class.text-slate-400]="direction() !== 'IN'"
+          [class.border-green-600]="direction() === 'IN'"
+          [class.bg-green-50]="direction() === 'IN'"
+          [class.text-green-700]="direction() === 'IN'">
+          <span class="text-xl font-bold leading-none">↑</span>
+          <span class="text-[0.7rem] font-semibold tracking-wide">Passenger In</span>
+        </button>
+
+        <button
+          (click)="setDirection('OUT')"
+          class="flex-1 flex flex-col items-center gap-1 py-4 rounded-lg border-[1.5px] transition-all active:scale-95"
+          [class.border-slate-200]="direction() !== 'OUT'"
+          [class.bg-slate-50]="direction() !== 'OUT'"
+          [class.text-slate-400]="direction() !== 'OUT'"
+          [class.border-red-600]="direction() === 'OUT'"
+          [class.bg-red-50]="direction() === 'OUT'"
+          [class.text-red-700]="direction() === 'OUT'">
+          <span class="text-xl font-bold leading-none">↓</span>
+          <span class="text-[0.7rem] font-semibold tracking-wide">Passenger Out</span>
+        </button>
+
+      </div>
+    </section>
+
+    <!-- Count -->
+    <section class="bg-white border border-slate-200 rounded-xl p-5 text-center">
+      <p class="text-[0.65rem] font-semibold tracking-widest uppercase text-slate-400 mb-2">Passenger Count</p>
+
+      <div class="flex items-center justify-center gap-5 mb-1">
+
+        <!-- Decrement -->
+        <button
+          (click)="decrement()"
+          [disabled]="!canDecrement()"
+          class="w-14 h-14 rounded-full border-[1.5px] flex items-center justify-center text-2xl transition-all active:scale-90 disabled:opacity-25 disabled:cursor-not-allowed border-red-200 text-red-600 hover:bg-red-50">
+          −
+        </button>
+
+        <!-- Count display / edit -->
+        <div class="min-w-[9rem] flex justify-center">
+          <span
+            *ngIf="!editingCount"
+            (click)="enableEditCount()"
+            class="font-mono font-semibold leading-none cursor-pointer select-none transition-colors"
+            [class]="countAnimClass"
+            [class.text-green-700]="direction() === 'IN'"
+            [class.text-red-600]="direction() === 'OUT'"
+            [class.text-slate-800]="direction() === null"
+            style="font-size: clamp(4.5rem, 20vw, 6.5rem);">
+            {{ count() }}
+          </span>
+          <input
+            *ngIf="editingCount"
+            id="manualInput"
+            type="number"
+            min="0"
+            [(ngModel)]="manualCountValue"
+            (blur)="saveManualCount()"
+            (keydown.enter)="saveManualCount()"
+            class="font-mono font-semibold text-blue-600 bg-transparent border-0 border-b-2 border-blue-400 outline-none text-center w-full [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none"
+            style="font-size: clamp(4.5rem, 20vw, 6.5rem); line-height:1;" />
+        </div>
+
+        <!-- Increment -->
+        <button
+          (click)="increment()"
+          class="w-14 h-14 rounded-full flex items-center justify-center text-2xl font-medium bg-blue-800 text-white border-blue-800 border-[1.5px] shadow-md shadow-blue-800/25 transition-all active:scale-90 hover:bg-blue-900">
+          +
+        </button>
+
+      </div>
+
+      <p class="text-[0.63rem] text-slate-400 mb-4">Tap the number to edit manually</p>
+
+      <button
+        (click)="reset()"
+        class="text-[0.7rem] font-medium text-slate-400 px-3 py-1.5 rounded-md hover:text-red-500 hover:bg-red-50 transition-colors">
+        Reset
+      </button>
+    </section>
+
+    <!-- Plate Number -->
+    <section class="bg-white border border-slate-200 rounded-xl p-5">
+      <label for="plateInput" class="text-[0.65rem] font-semibold tracking-widest uppercase text-slate-400 mb-3 block">
+        Vehicle Plate Number
+      </label>
+      <input
+        id="plateInput"
+        type="text"
+        [ngModel]="plateNumber()"
+        (input)="onPlateInput($event)"
+        placeholder="e.g. ABC 1234"
+        autocomplete="off"
+        autocorrect="off"
+        spellcheck="false"
+        maxlength="10"
+        class="w-full font-mono text-[1.15rem] font-medium tracking-[0.18em] text-center uppercase text-slate-900 bg-slate-50 border-[1.5px] border-slate-200 rounded-lg px-4 py-3.5 outline-none placeholder:text-slate-300 placeholder:text-sm placeholder:tracking-normal focus:border-blue-400 focus:ring-2 focus:ring-blue-400/15 focus:bg-white transition-all" />
+    </section>
+
+    <!-- Recent Entries -->
+    <section
+      *ngIf="entries().length > 0"
+      class="bg-white border border-slate-200 rounded-xl p-5">
+      <p class="text-[0.65rem] font-semibold tracking-widest uppercase text-slate-400 mb-3">Recent Entries</p>
+      <ul class="divide-y divide-slate-100">
+        @for (entry of recentEntries(); track entry.id) {
+          <li class="flex items-center gap-2.5 py-2.5 first:pt-0 last:pb-0">
+            <span
+              class="font-mono text-[0.6rem] font-semibold tracking-widest px-2 py-0.5 rounded min-w-[38px] text-center border"
+              [class.bg-green-50]="entry.direction === 'IN'"
+              [class.text-green-700]="entry.direction === 'IN'"
+              [class.border-green-200]="entry.direction === 'IN'"
+              [class.bg-red-50]="entry.direction === 'OUT'"
+              [class.text-red-600]="entry.direction === 'OUT'"
+              [class.border-red-200]="entry.direction === 'OUT'">
+              {{ entry.direction }}
+            </span>
+            <span class="font-mono text-[0.8rem] font-medium text-slate-700 flex-1 tracking-wide">{{ entry.plate }}</span>
+            <span class="font-mono text-[0.73rem] font-semibold text-slate-500">{{ entry.count }} pax</span>
+            <span class="font-mono text-[0.65rem] text-slate-400 min-w-[36px] text-right">{{ entry.time }}</span>
+          </li>
+        }
+      </ul>
+    </section>
+
+  </main>
+
+  <!-- ── Submit Footer ──────────────────────────────────────────────────── -->
+  <footer class="fixed bottom-0 left-0 right-0 z-40 bg-slate-50/90 backdrop-blur border-t border-slate-200 px-4 py-3 flex justify-center">
+    <button
+      (click)="submit()"
+      [disabled]="count() === 0 || !plateNumber().trim()"
+      class="w-full max-w-lg flex items-center justify-center gap-2 py-4 rounded-xl bg-blue-800 text-white text-[0.95rem] font-bold tracking-wide shadow-lg shadow-blue-800/30 transition-all active:scale-[0.98] disabled:opacity-35 disabled:cursor-not-allowed hover:bg-blue-900">
+      <svg class="w-4.5 h-4.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8 15.414l-4.707-4.707a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+      </svg>
+      Submit Entry
+    </button>
+  </footer>
+
+  <!-- ── Toast ─────────────────────────────────────────────────────────── -->
+  <div
+    class="fixed bottom-24 left-1/2 -translate-x-1/2 z-50 px-5 py-2.5 rounded-full text-white text-[0.82rem] font-semibold whitespace-nowrap pointer-events-none max-w-[calc(100vw-3rem)] overflow-hidden text-ellipsis transition-all duration-300"
+    [class.opacity-0]="!toastVisible()"
+    [class.translate-y-3]="!toastVisible()"
+    [class.opacity-100]="toastVisible()"
+    [class.translate-y-0]="toastVisible()"
+    [class.bg-green-800]="toastType() === 'success'"
+    [class.bg-red-800]="toastType() === 'error'">
+    {{ toastMessage() }}
+  </div>
+
+</div>
