@@ -12,6 +12,7 @@ export interface LogEntry {
   plateNumber: string;
   guardName: string;
   guardId: string;
+  direction?: 'IN' | 'OUT';
   timestamp: string;
   date: string;
   time: string;
@@ -58,7 +59,7 @@ export class StorageService {
     return [];
   }
 
-  addLog(count: number, plateNumber: string, guardName: string, guardId: string): LogEntry {
+  addLog(count: number, plateNumber: string, guardName: string, guardId: string, direction?: 'IN' | 'OUT'): LogEntry {
     const now = new Date();
     const logEntry: LogEntry = {
       id: this.generateId(),
@@ -66,6 +67,7 @@ export class StorageService {
       plateNumber,
       guardName,
       guardId,
+      direction,
       timestamp: now.toISOString(),
       date: now.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' }),
       time: now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit' })
