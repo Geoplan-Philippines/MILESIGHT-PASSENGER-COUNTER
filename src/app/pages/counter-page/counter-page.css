@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 /* JTI Logo */
 .jti-logo {
   height: 48px;
@@ -42,7 +42,7 @@
   background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
   border-bottom: 2px solid #1e40af;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-=======
+}
 /* counter-page.css */
 /* Only animation keyframes live here — everything else is Tailwind in the template */
 
@@ -50,7 +50,6 @@
   0%   { transform: scale(1); }
   50%  { transform: scale(1.12); }
   100% { transform: scale(1); }
->>>>>>> clark_dev
 }
 
 @keyframes bump-down {
