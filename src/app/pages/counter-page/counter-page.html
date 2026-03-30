@@ -89,7 +89,7 @@
           (click)="decrement()"
           [disabled]="!canDecrement()"
           class="w-14 h-14 rounded-full border-[1.5px] flex items-center justify-center text-2xl transition-all active:scale-90 disabled:opacity-25 disabled:cursor-not-allowed border-red-200 text-red-600 hover:bg-red-50">
-          −
+          -
         </button>
 
         <!-- Count display / edit -->
@@ -185,12 +185,16 @@
   <footer class="fixed bottom-0 left-0 right-0 z-40 bg-slate-50/90 backdrop-blur border-t border-slate-200 px-4 py-3 flex justify-center">
     <button
       (click)="submit()"
-      [disabled]="count() === 0 || !plateNumber().trim()"
+      [disabled]="count() === 0 || !plateNumber().trim() || isSubmitting()"
       class="w-full max-w-lg flex items-center justify-center gap-2 py-4 rounded-xl bg-blue-800 text-white text-[0.95rem] font-bold tracking-wide shadow-lg shadow-blue-800/30 transition-all active:scale-[0.98] disabled:opacity-35 disabled:cursor-not-allowed hover:bg-blue-900">
-      <svg class="w-4.5 h-4.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
+      <svg *ngIf="!isSubmitting()" class="w-4.5 h-4.5 shrink-0" viewBox="0 0 20 20" fill="currentColor">
         <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414L8 15.414l-4.707-4.707a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
       </svg>
-      Submit Entry
+      <svg *ngIf="isSubmitting()" class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      {{ isSubmitting() ? 'Submitting...' : 'Submit Entry' }}
     </button>
   </footer>
 
